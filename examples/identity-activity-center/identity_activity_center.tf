@@ -41,6 +41,7 @@ data "aws_caller_identity" "current" {}
 resource "aws_kms_key" "identity_activity_center_encryption_key" {
   description         = "KMS key for Athena audit log"
   enable_key_rotation = true
+  rotation_period_in_days = 90
 }
 
 # KMS key policy granting full access to the current AWS account
@@ -95,6 +96,7 @@ resource "aws_sqs_queue" "identity_activity_center_queue_dlq" {
     Purpose   = "Dead letter queue for failed identity event processing"
     Component = "MessageQueue"
   }
+  sqs_managed_sse_enabled = true
 }
 
 
@@ -119,6 +121,7 @@ resource "aws_sqs_queue" "identity_activity_center_queue" {
     Purpose   = "Primary queue for identity event ingestion"
     Component = "MessageQueue"
   }
+  sqs_managed_sse_enabled = true
 }
 
 
